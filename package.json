@@ -1,0 +1,25 @@
+{
+  "name": "express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://stas001@bitbucket.org/stas001/express.git"
+  },
+  "keywords": [],
+  "author": "Z S",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://bitbucket.org/stas001/express/issues"
+  },
+  "homepage": "https://bitbucket.org/stas001/express#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

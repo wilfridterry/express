@@ -1,22 +1,22 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import { userRouter } from './users/users.js';
 
 const port = 8000;
 const app = express();
-
-app.get('/', (req, res) => {
-    throw new Error('Error');
-    res.send('Home');
-});
 
 app.use((req, res, next) => {
     console.log('Time ', Date.now());
     next();
 });
 
+app.get('/', (req, res) => {
+    throw new Error('Error');
+    res.send('Home');
+});  
+
 app.use('/users', userRouter);
 
-app.use((err, req, res, next) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     console.log(err.message);
     res.status(403).send(err.message);
 });

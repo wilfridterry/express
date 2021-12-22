@@ -1,6 +1,7 @@
 import { Router, Response, Request, NextFunction } from "express";
 import { BaseController } from "../core/base.controller";
 import { Route } from "../core/route.interface";
+import { HTTPError } from "../errors/http-error.class";
 import { LoggerService } from "../logger/logger.service";
 
 export class UserController extends BaseController
@@ -43,6 +44,8 @@ export class UserController extends BaseController
      * @param Response res 
      */
     public login(req: Request, res: Response, next: NextFunction): void {
+        throw new HTTPError('Unauthorized.', 401);
+        
         this.ok(res, 'login')
     }
 }

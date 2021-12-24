@@ -1,15 +1,20 @@
 import { Router, Response, Request, NextFunction } from "express";
+import { inject, injectable } from "inversify";
 import { BaseController } from "../core/base.controller";
 import { Route } from "../core/route.interface";
 import { HTTPError } from "../errors/http-error.class";
-import { LoggerService } from "../logger/logger.service";
+import { ILogger } from "../logger/logger.interface";
+import { TYPES } from "../types";
+import 'reflect-metadata';
+import { IUserController } from "./usercontroller.interface";
 
-export class UserController extends BaseController
+@injectable()
+export class UserController extends BaseController implements IUserController
 {
-    public groop: string = '/users';
+    public group: string = '/users';
 
-    public constructor(logger: LoggerService) {
-        super(logger);
+    public constructor(@inject(TYPES.ILogger) private loggerService: ILogger) {
+        super(loggerService);
 
         const register: Route = {
             method: 'post',

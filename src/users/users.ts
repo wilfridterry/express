@@ -1,18 +1,18 @@
-import express from "express";
+import express from 'express';
 
 const userRouter = express.Router();
 
 userRouter.use((req, res, next) => {
-    console.log('Users Handle');
-    next();
+	console.log('Users Handle');
+	next();
 });
 
 userRouter.post('/login', (req, res) => {
-    res.send('login');
+	res.send('login');
 });
 
 userRouter.post('/register', (req, res) => {
-    res.send('register');
+	res.send('register');
 });
 
 export { userRouter };

@@ -9,36 +9,34 @@ import 'reflect-metadata';
 import { IUserController } from './users/usercontroller.interface';
 import { UserController } from './users/users.controller';
 @injectable()
-export class App
-{
-    private server: Server;
-    private app: Express;
-    private static port:number = 3000;
-    
-    constructor(
-        @inject(TYPES.ILogger) private logger: ILogger, 
-        @inject(TYPES.IUserController) private userController: UserController, 
-        @inject(TYPES.ExeptionFilter) private exceptionFilter: Exception
-    ) {
+export class App {
+	private server: Server;
+	private app: Express;
+	private static port = 3000;
 
-        this.app = express();
-    }
+	constructor(
+		@inject(TYPES.ILogger) private logger: ILogger,
+		@inject(TYPES.IUserController) private userController: UserController,
+		@inject(TYPES.ExeptionFilter) private exceptionFilter: Exception,
+	) {
+		this.app = express();
+	}
 
-    public async init() {
-        this.useRoutes();
-        this.useExeptionFilters();
-        this.server = this.app.listen(App.port);
+	public async init(): Promise<void> {
+		this.useRoutes();
+		this.useExeptionFilters();
+		this.server = this.app.listen(App.port);
 
-        this.logger.log(`The server is runnig on http://localhost:${App.port}`);
-    }
+		this.logger.log(`The server is runnig on http://localhost:${App.port}`);
+	}
 
-    private useRoutes() {
-        this.app.use(this.userController.group, this.userController.router);
-    }
+	private useRoutes(): void {
+		this.app.use(this.userController.group, this.userController.router);
+	}
 
-    private useExeptionFilters() {
-        const handler = this.exceptionFilter.catch.bind(this.exceptionFilter);
+	private useExeptionFilters(): void {
+		const handler = this.exceptionFilter.catch.bind(this.exceptionFilter);
 
-        this.app.use(handler); 
-    }
+		this.app.use(handler);
+	}
 }

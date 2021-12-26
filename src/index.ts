@@ -5,46 +5,43 @@ const port = 8000;
 const app = express();
 
 app.use((req, res, next) => {
-    console.log('Time ', Date.now());
-    next();
+	console.log('Time ', Date.now());
+	next();
 });
 
 app.get('/', (req, res) => {
-    throw new Error('Error');
-    res.send('Home');
-});  
+	throw new Error('Error');
+	res.send('Home');
+});
 
 app.use('/users', userRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.log(err.message);
-    res.status(403).send(err.message);
+	console.log(err.message);
+	res.status(403).send(err.message);
 });
 //#############################################
 
-
-
-
 app.get('/hello', (req, res) => {
-    // res.status(201).send({success: true});
-    // res.download('/test.pdf', 'testtest.pdf');
-    // res.redirect(301, 'https://ex.com');
-    // res.append('Warning', 'code');
+	// res.status(201).send({success: true});
+	// res.download('/test.pdf', 'testtest.pdf');
+	// res.redirect(301, 'https://ex.com');
+	// res.append('Warning', 'code');
 
-    // res.set('Content-Type', 'text/plain');
+	// res.set('Content-Type', 'text/plain');
 
-    // res.type('application/json');
-    // res.cookie('token', 'TOKKEN', {
-    //     domain: '',
-    //     path: '/',
-    //     secure: true,
-    //     expires: 3*60*60*1000
-    // });
+	// res.type('application/json');
+	// res.cookie('token', 'TOKKEN', {
+	//     domain: '',
+	//     path: '/',
+	//     secure: true,
+	//     expires: 3*60*60*1000
+	// });
 
-    // res.clearCookie('token');
-    // res.send("HELLO");
+	// res.clearCookie('token');
+	// res.send("HELLO");
 
-    res.end();
+	res.end();
 });
 // app.all('/hello', (req, res, next) => {
 //     console.log('ALL HELLO');
@@ -68,7 +65,6 @@ app.get('/hello', (req, res) => {
 //     res.send('Something');
 // });
 
-
 app.listen(port, () => {
-    console.log(`The server is runnig on http://localhost:${port}`);
-})
+	console.log(`The server is runnig on http://localhost:${port}`);
+});

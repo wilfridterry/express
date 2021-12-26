@@ -12,7 +12,7 @@ import { UserController } from './users/users.controller';
 export class App {
 	private server: Server;
 	private app: Express;
-	private static port = 3000;
+	private static port = 3001;
 
 	constructor(
 		@inject(TYPES.ILogger) private logger: ILogger,

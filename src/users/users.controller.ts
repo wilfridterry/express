@@ -45,6 +45,7 @@ export class UserController extends BaseController implements IUserController {
 	 * @param Response res
 	 */
 	public login(req: Request, res: Response, next: NextFunction): void {
+		console.log('ddd');
 		throw new HTTPError('Unauthorized.', 401);
 
 		this.ok(res, 'login');

@@ -22,3 +22,5 @@
 // export class D {
 // 	constructor(@Inject('C') c: C) {}
 // }
+
+// clinic doctor --on-port 'autocannon -m POST localhost:3000/users/register' -- node dist/main.js

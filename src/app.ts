@@ -12,7 +12,7 @@ import { UserController } from './users/users.controller';
 export class App {
 	private server: Server;
 	private app: Express;
-	private static port = 3001;
+	private port: number;
 
 	constructor(
 		@inject(TYPES.ILogger) private logger: ILogger,
@@ -20,14 +20,14 @@ export class App {
 		@inject(TYPES.ExeptionFilter) private exceptionFilter: Exception,
 	) {
 		this.app = express();
+		this.port = 8000;
 	}
 
 	public async init(): Promise<void> {
 		this.useRoutes();
 		this.useExeptionFilters();
-		this.server = this.app.listen(App.port);
-
-		this.logger.log(`The server is runnig on http://localhost:${App.port}`);
+		this.server = this.app.listen(this.port);
+		this.logger.log(`The server is runnig on http://localhost:${this.port}`);
 	}
 
 	private useRoutes(): void {
@@ -38,5 +38,9 @@ export class App {
 		const handler = this.exceptionFilter.catch.bind(this.exceptionFilter);
 
 		this.app.use(handler);
+	}
+
+	public close(): void {
+		this.server.close();
 	}
 }

@@ -10,7 +10,8 @@
     "lint": "eslint ./src/**",
     "lint:fix": "eslint ./src/** --fix",
     "build": "tsc",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "dev:inspect": "nodemon -e ts,json --exec node --inspect=localhost:3003 -r ts-node/register src/main.ts"
   },
   "repository": {
     "type": "git",

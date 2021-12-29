@@ -10,12 +10,19 @@ import { IUserController } from './usercontroller.interface';
 
 import fs from 'fs';
 import { resolve } from 'path';
+import { UserLoginDto } from './DTO/user-login.dto';
+import { UserRegisterDto } from './DTO/user-register.dto';
+import { User } from './user.entity';
+import { IUserService } from './user.service.interface';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
 	public group = '/users';
 
-	public constructor(@inject(TYPES.ILogger) private loggerService: ILogger) {
+	constructor(
+		@inject(TYPES.ILogger) private loggerService: ILogger,
+		@inject(TYPES.UserService) private userService: IUserService,
+	) {
 		super(loggerService);
 
 		this.bindRoutes([
@@ -29,8 +36,17 @@ export class UserController extends BaseController implements IUserController {
 	 * @param Request req
 	 * @param Response res
 	 */
-	public register(req: Request, res: Response, next: NextFunction): void {
-		this.ok(res, 'register');
+	async register(
+		{ body }: Request<{}, {}, UserRegisterDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		const result = await this.userService.createUser(body);
+		if (!result) {
+			return next(new HTTPError('There is already a user with a current email', 422));
+		}
+
+		this.ok(res, { email: result.email });
 	}
 
 	/**
@@ -38,8 +54,8 @@ export class UserController extends BaseController implements IUserController {
 	 * @param Request req
 	 * @param Response res
 	 */
-	public login(req: Request, res: Response, next: NextFunction): void {
-		next(new HTTPError('Unauthorized.', 401));
+	login({ body }: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): void {
+		// next(new HTTPError('Unauthorized.', 401));
 
 		this.ok(res, 'login');
 	}

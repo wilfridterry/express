@@ -33,7 +33,12 @@ export class UserController extends BaseController implements IUserController {
 				func: this.register,
 				middleware: [new ValidateMiddleware(UserRegisterDto)],
 			},
-			{ path: '/login', method: 'post', func: this.login },
+			{
+				path: '/login',
+				method: 'post',
+				func: this.login,
+				middleware: [new ValidateMiddleware(UserLoginDto)],
+			},
 		]);
 	}
 
@@ -60,8 +65,14 @@ export class UserController extends BaseController implements IUserController {
 	 * @param Request req
 	 * @param Response res
 	 */
-	login({ body }: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): void {
-		// next(new HTTPError('Unauthorized.', 401));
+	async login(
+		{ body }: Request<{}, {}, UserLoginDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		if (!(await this.userService.verifyUser(body))) {
+			return next(new HTTPError('Unauthorized.', 401));
+		}
 
 		this.ok(res, 'login');
 	}

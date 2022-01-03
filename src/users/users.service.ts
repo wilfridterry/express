@@ -8,6 +8,7 @@ import { TYPES } from '../types';
 import { IConfigService } from '../config/config.service.interface';
 import { IUsersRepository } from './users.repository.interface';
 import { UserModel } from '@prisma/client';
+import { compare } from 'bcryptjs';
 
 @injectable()
 export class UserService implements IUserService {
@@ -30,7 +31,16 @@ export class UserService implements IUserService {
 		return this.usersRepository.create(newUser);
 	}
 
-	async validateUser({ email, password }: UserLoginDto): Promise<boolean> {
-		return true;
+	async verifyUser({ email, password }: UserLoginDto): Promise<boolean> {
+		const existedUser = await this.usersRepository.find(email);
+		if (!existedUser) {
+			return false;
+		}
+
+		const user = new User(existedUser.email, existedUser.name, existedUser.password);
+
+		const result = await user.comparePassword(password);
+
+		return result;
 	}
 }

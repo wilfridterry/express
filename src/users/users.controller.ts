@@ -52,7 +52,7 @@ export class UserController extends BaseController implements IUserController {
 			return next(new HTTPError('There is already a user with a current email', 422));
 		}
 
-		this.ok(res, { email: result.email });
+		this.ok(res, { email: result.email, id: result.id });
 	}
 
 	/**

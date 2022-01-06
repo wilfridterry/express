@@ -9,17 +9,16 @@ export class AuthMiddleware implements IMiddleware {
 	handle(req: Request, res: Response, next: NextFunction): void {
 		if (req.headers.authorization) {
 			//Bearer JWT
-			console.log('df');
-			
 			verify(req.headers.authorization.split(' ')[1], this.secret, (err, payload) => {
 				if (err) {
-					throw new HTTPError('Unauthenticated', 401);
+					next();
 				} else if (payload) {
 					req.user = payload.email;
 					next();
 				}
 			});
+		} else {
+			next();
 		}
-		next();
 	}
 }

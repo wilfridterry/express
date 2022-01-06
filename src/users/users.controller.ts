@@ -18,6 +18,8 @@ import { ValidateMiddleware } from '../core/validate.middleware';
 import { sign } from 'jsonwebtoken';
 import { ConfigService } from '../config/config.service';
 import { IConfigService } from '../config/config.service.interface';
+import { Guard } from '../core/guard.middlweware';
+import { IUsersRepository } from './users.repository.interface';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -27,6 +29,7 @@ export class UserController extends BaseController implements IUserController {
 		@inject(TYPES.ILogger) private loggerService: ILogger,
 		@inject(TYPES.UserService) private userService: IUserService,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
+		@inject(TYPES.UsersRepository) private userRepository: IUsersRepository,
 	) {
 		super(loggerService);
 
@@ -47,6 +50,7 @@ export class UserController extends BaseController implements IUserController {
 				path: '/info',
 				method: 'get',
 				func: this.info,
+				middleware: [new Guard()],
 			},
 		]);
 	}
@@ -98,7 +102,16 @@ export class UserController extends BaseController implements IUserController {
 		res: Response,
 		next: NextFunction,
 	): Promise<void> {
-		this.ok(res, { email: user });
+		const existedUser = await this.userService.getUserInfo(user);
+
+		if (!existedUser) {
+			throw new HTTPError('Unauthenticate', 401);
+		}
+
+		this.ok(res, {
+			id: existedUser?.id,
+			email: existedUser?.email,
+		});
 	}
 
 	private signJWT(email: string, secret: string): Promise<string> {

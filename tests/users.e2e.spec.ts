@@ -18,6 +18,14 @@ describe('Users e2e', () => {
 
         expect(res.statusCode).toBe(422);
     });
+
+    it('loginWithNotValidData', async () => {
+        const res = await request(application.app)
+            .post('/users/login')
+            .send({ email: 'a@a.com', password: '3' });
+
+        expect(res.statusCode).toBe(401);
+    }); 
 });
 
 afterAll(() => {

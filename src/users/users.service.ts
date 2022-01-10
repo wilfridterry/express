@@ -33,6 +33,8 @@ export class UserService implements IUserService {
 
 	async verifyUser({ email, password }: UserLoginDto): Promise<boolean> {
 		const existedUser = await this.usersRepository.find(email);
+		console.log(existedUser);
+
 		if (!existedUser) {
 			return false;
 		}

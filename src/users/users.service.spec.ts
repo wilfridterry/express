@@ -22,6 +22,8 @@ let configService: IConfigService;
 let userRepository: IUsersRepository;
 let userService: IUserService;
 
+let createdUser: UserModel | null;
+
 beforeAll(() => {
 	container.bind<IUserService>(TYPES.UserService).to(UserService);
 	container.bind<IConfigService>(TYPES.ConfigService).toConstantValue(ConfigServiceMock);
@@ -43,13 +45,47 @@ describe('User Service', () => {
 				id: 1,
 			}),
 		);
-		const createdUser = await userService.createUser({
+
+		createdUser = await userService.createUser({
 			email: 'a@a.com',
 			name: 'Name',
-			password: 'dddd',
+			password: 'password',
 		});
 
 		expect(createdUser?.id).toEqual(1);
 		expect(createdUser?.password).not.toEqual(1);
+	});
+
+	it('verifyNotExistedUser', async () => {
+		userRepository.find = jest.fn().mockReturnValueOnce(null);
+
+		const result = await userService.verifyUser({
+			email: 'a@a.com',
+			password: 'password',
+		});
+
+		expect(result).toBeFalsy();
+	});
+
+	it('verifyUserWithNotValidPassword', async () => {
+		userRepository.find = jest.fn().mockReturnValueOnce(createdUser);
+
+		const result = await userService.verifyUser({
+			email: 'a@a.com',
+			password: 'NOTVALID',
+		});
+
+		expect(result).toBeFalsy();
+	});
+
+	it('verifyuserWithValidPassword', async () => {
+		userRepository.find = jest.fn().mockReturnValueOnce(createdUser);
+
+		const result = await userService.verifyUser({
+			email: 'a@a.com',
+			password: 'password',
+		});
+
+		expect(result).toBeTruthy();
 	});
 });

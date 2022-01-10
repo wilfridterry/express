@@ -14,7 +14,7 @@ import { AuthMiddleware } from './core/auth.middleware';
 @injectable()
 export class App {
 	private server: Server;
-	private app: Express;
+	app: Express;
 	private port: number;
 
 	constructor(
